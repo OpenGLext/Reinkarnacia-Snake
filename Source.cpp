@@ -569,7 +569,7 @@ void ChangeProjection()
   glLoadIdentity();
   gluOrtho2D(0,w,0,h);
 
-  gluLookAt(0,0,0,0,0,0,1,0,0);
+  //gluLookAt(0,0,0,0,0,0,1,0,0);
 }
 void ShowSnake()
 {
@@ -705,25 +705,25 @@ void Mouse(int state,int button,int x,int y)
 }
 void LoadResources()
 {
-	if ( !backMusic.openFromFile("../Data/backmusic.ogg"))
+	if ( !backMusic.openFromFile("Data/backmusic.ogg"))
 	                                                          {MessageBox(0,L"Not found music file",L"info",MB_OK);}
         
 	if (PlayMusicOn ) backMusic.play();
 	                  backMusic.setLoop(true);
 
-	 if (!collisionBuff.loadFromFile("../Data/collision.wav")) 
+	 if (!collisionBuff.loadFromFile("Data/collision.wav")) 
 	                                                          {MessageBox(0,L"Not found collision.wav file",L"info",MB_OK);}
-	 if (!eatBuff.loadFromFile("../Data/eat-2.wav"))
+	 if (!eatBuff.loadFromFile("Data/eat-2.wav"))
 	                                                          {MessageBox(0,L"Not found eat.wav file",L"info",MB_OK);}
 
-	 if (!gameoverBuff.loadFromFile("../Data/gong.wav"))
+	 if (!gameoverBuff.loadFromFile("Data/gong.wav"))
 	                                                          {MessageBox(0,L"Not found gameover.wav file",L"info",MB_OK);}
 
-     pLdrTexture->LoadTexture(snakeTexture,"../Data/body.tga");
-	 pLdrTexture->LoadTexture(fructTexture,"../Data/Apple-2.tga");
-	 pLdrTexture->LoadTexture(snakeHead,"../Data/head.tga");
-	 pLdrTexture->LoadTexture(pBackTexture,"../Data/back.tga"); 
-	 pLdrTexture->LoadTexture(bonusTexture,"../Data/bonus.tga"); 
+     pLdrTexture->LoadTexture(snakeTexture,"Data/body.tga");
+	 pLdrTexture->LoadTexture(fructTexture,"Data/Apple-2.tga");
+	 pLdrTexture->LoadTexture(snakeHead,"Data/head.tga");
+	 pLdrTexture->LoadTexture(pBackTexture,"Data/back.tga"); 
+	 pLdrTexture->LoadTexture(bonusTexture,"Data/bonus.tga"); 
 
 
 }
