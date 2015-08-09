@@ -50,6 +50,7 @@ sf::Music backMusic;
 
 
  bool DEMO = false;
+ const int countTextures = 20;
 
 GameData *pGameData;
 Texture    *snakeTexture;
@@ -58,6 +59,7 @@ Texture    *snakeHead;
 Texture    *pBackTexture;
 Texture    *bonusTexture;
 Texture    *partSysTexture;
+Texture    *texturePack[countTextures];
 GLfloat  NormalArraySnake[200];
 GLfloat  NormalArrayApple[2];
 
@@ -606,6 +608,11 @@ void ShowSnake()
 //				}
 //}
 
+void BindAllTextures(int indx,Texture *PointToarray)
+{
+	addAllTextures(indx,texturePack[0]);
+}
+
 void display()
 {
    ResetGame();
@@ -802,12 +809,16 @@ void GameInit()
 	bonusTexture = new Texture;
 partSysTexture   = new Texture;
 
+
          pFruct = new Fruct();
          pSnake = new Snake(*pFruct);
          pGame  = new Game();
          pLight = new Light();
 	     pModel = new Model("C:\\mycube.obj");
 	pLdrTexture = new Quad();
+
+	for(int i=0;i<countTextures; i++)
+	texturePack[i] = new Texture;
 
 	//pLight->OnOffLight(true);
 	pFruct->New();
