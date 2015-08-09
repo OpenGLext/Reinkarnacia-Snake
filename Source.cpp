@@ -139,6 +139,9 @@ static GLfloat colors[12][3]=		// Rainbow Of Colors
 	{0.5f,0.5f,1.0f},{0.75f,0.5f,1.0f},{1.0f,0.5f,1.0f},{1.0f,0.5f,0.75f}
 };
 
+int depthScreen(-100);
+const int stepDepthScreen(5);
+
 bool	keys[256];					// Array Used For The Keyboard Routine
 bool	active=TRUE;				// Window Active Flag Set To TRUE By Default
 bool	fullscreen=TRUE;			// Fullscreen Flag Set To Fullscreen Mode By Default
@@ -170,6 +173,16 @@ void InitPartSys()
 	int loop;
 
 	pLdrTexture->LoadTexture(partSysTexture,"Data\\particle.tga");
+
+	glViewport(0,0,w,h);						// Reset The Current Viewport
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+
+	// Calculate The Aspect Ratio Of The Window
+	gluPerspective(45.0f,(GLfloat)w/(GLfloat)h,0.1f,200.0f);
+
+	
 
 glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
 	glClearColor(0.0f,0.0f,0.0f,0.0f);					// Black Background
@@ -205,18 +218,10 @@ void DrawPartSys()
 {
   int loop;
 
-    glViewport(0,0,w,h);						// Reset The Current Viewport
-
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
-
-	// Calculate The Aspect Ratio Of The Window
-	gluPerspective(45.0f,(GLfloat)w/(GLfloat)h,0.1f,200.0f);
-
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+    glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glLoadIdentity();
 
-		gluLookAt(0,0,-100,0,0,0,0,1,0);
+		gluLookAt(0,0,depthScreen,0,0,0,1,0,0);
 
 
 	for (loop=0;loop<MAX_PARTICLES;loop++)					// Loop Through All The Particles
@@ -262,21 +267,22 @@ void DrawPartSys()
 			}
 
 						// If Number Pad 8 And Y Gravity Is Less Than 1.5 Increase Pull Upwards
-			if (keys[VK_NUMPAD8] && (particle[loop].yg<1.5f)) particle[loop].yg+=0.01f;
+			if (keys[VK_NUMPAD8] && (particle[loop].yg<1.5f)) { particle[loop].yg+=0.01f; keys[VK_NUMPAD8] = false; }
 
 			// If Number Pad 2 And Y Gravity Is Greater Than -1.5 Increase Pull Downwards
-			if (keys[VK_NUMPAD2] && (particle[loop].yg>-1.5f)) particle[loop].yg-=0.01f;
+			if (keys[VK_NUMPAD2] && (particle[loop].yg>-1.5f)) { particle[loop].yg-=0.01f; keys[VK_NUMPAD2] = false; }
 
 			// If Number Pad 6 And X Gravity Is Less Than 1.5 Increase Pull Right
-			if (keys[VK_NUMPAD6] && (particle[loop].xg<1.5f)) particle[loop].xg+=0.01f;
+			if (keys[VK_NUMPAD6] && (particle[loop].xg<1.5f)) { particle[loop].xg+=0.01f; keys[VK_NUMPAD6] = false; }
 
 			// If Number Pad 4 And X Gravity Is Greater Than -1.5 Increase Pull Left
-			if (keys[VK_NUMPAD4] && (particle[loop].xg>-1.5f)) particle[loop].xg-=0.01f;
+			if (keys[VK_NUMPAD4] && (particle[loop].xg>-1.5f)) { particle[loop].xg-=0.01f; keys[VK_NUMPAD4] = false; }
 
 			if (keys[VK_F1])
 			{
 			col++;							// Change The Particle Color
 					if (col>11)	col=0;	
+					keys[VK_F1] = false;
 			}
 
 			if (keys[VK_TAB])										// Tab Key Causes A Burst
@@ -287,10 +293,11 @@ void DrawPartSys()
 				particle[loop].xi=float((rand()%50)-26.0f)*10.0f;	// Random Speed On X Axis
 				particle[loop].yi=float((rand()%50)-25.0f)*10.0f;	// Random Speed On Y Axis
 				particle[loop].zi=float((rand()%50)-25.0f)*10.0f;	// Random Speed On Z Axis
+
+				keys[VK_TAB] = false;
 			}
 
-			for (int i=0; i<256;i++)
-				keys[i] = false;
+		
 }
 	}
 }
@@ -644,6 +651,8 @@ void getkeys_down(unsigned char key,int x,int y)
 	case 'd' : keys[VK_NUMPAD4] = true; break;
 	case 'z' : keys[VK_TAB] = true; break;
 	case 'q' : keys[VK_F1] = true; break;
+	case '+' : if (depthScreen < 0) depthScreen = 100; if (depthScreen > 200) depthScreen = 100;   depthScreen -= stepDepthScreen; break;
+	case '-' : if (depthScreen < 0) depthScreen = 100;  depthScreen += stepDepthScreen; break;
 
 
 			
