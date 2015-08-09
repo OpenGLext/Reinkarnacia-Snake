@@ -602,20 +602,20 @@ void ShowSnake()
 void display()
 {
    ResetGame();
-   ChangeProjection();
+  // ChangeProjection();
 				 	
 				 // добавим освещение к голове что бы как фонарик или прожектор светил при движении
 			    //  pLight->SetPosLight(pSnake->GetPosHeadX());
 			   
 
-				 DrawBack(); // есть утечка кучи!!!
-				DrawLife(); 
+				// DrawBack(); // есть утечка кучи!!!
+			//	DrawLife(); 
 
-				 ShowSnake(); // есть утечка кучи!!!
+				// ShowSnake(); // есть утечка кучи!!!
 
-				 DrawFruct(); // есть утечка кучи!!!
+				// DrawFruct(); // есть утечка кучи!!!
 
-				 //DrawPartSys();
+				 DrawPartSys();
 
 			   //  GameLogic();		
 
