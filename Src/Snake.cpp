@@ -152,13 +152,18 @@ void Snake::Tick()
 		 s[i].y = s[i-1].y;
 	 }
 
-     dx += speedSnake + stepAnim;
-	 dy += speedSnake + stepAnim;
+    // dx += speedSnake + stepAnim;
+	// dy += speedSnake + stepAnim;
 
-     if (m_dir==0) s[0].y += dy;  
+     /*if (m_dir==0) s[0].y += dy;  
 	 if (m_dir==1) s[0].x -= dx;     
 	 if (m_dir==2) s[0].x += dx;   
-	 if (m_dir==3) s[0].y -= dy;
+	 if (m_dir==3) s[0].y -= dy;*/
+
+	 if (m_dir==0) s[0].y += 1;  
+	 if (m_dir==1) s[0].x -= 1;     
+	 if (m_dir==2) s[0].x += 1;   
+	 if (m_dir==3) s[0].y -= 1;
 
 	 this->isOutWall();
 	this->CheckHeadWithTail();

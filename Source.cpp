@@ -17,10 +17,21 @@
 #include "include\glm\glm.hpp"
 #include "include\Bonus.h"
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
+#include	"lua.h"
+#include	"lauxlib.h"
+#include	"lualib.h"
+
+#ifdef	__cplusplus
+};
+#endif
 
 #pragma comment(lib,"/freeglut.lib")
 #pragma comment(lib,"/sfml-audio-d.lib")
-
+#pragma comment(lib,"lua53.lib")
 //#include <SFML\System.hpp>
 //
 //#ifdef _DEBUG
@@ -50,7 +61,6 @@ sf::Music backMusic;
 
 
  bool DEMO = false;
- const int countTextures = 20;
 
 GameData *pGameData;
 Texture    *snakeTexture;
@@ -59,7 +69,6 @@ Texture    *snakeHead;
 Texture    *pBackTexture;
 Texture    *bonusTexture;
 Texture    *partSysTexture;
-Texture    *texturePack[countTextures];
 GLfloat  NormalArraySnake[200];
 GLfloat  NormalArrayApple[2];
 
@@ -141,9 +150,6 @@ static GLfloat colors[12][3]=		// Rainbow Of Colors
 	{0.5f,0.5f,1.0f},{0.75f,0.5f,1.0f},{1.0f,0.5f,1.0f},{1.0f,0.5f,0.75f}
 };
 
-int depthScreen(-100);
-const int stepDepthScreen(5);
-
 bool	keys[256];					// Array Used For The Keyboard Routine
 bool	active=TRUE;				// Window Active Flag Set To TRUE By Default
 bool	fullscreen=TRUE;			// Fullscreen Flag Set To Fullscreen Mode By Default
@@ -175,16 +181,6 @@ void InitPartSys()
 	int loop;
 
 	pLdrTexture->LoadTexture(partSysTexture,"Data\\particle.tga");
-
-	glViewport(0,0,w,h);						// Reset The Current Viewport
-
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
-
-	// Calculate The Aspect Ratio Of The Window
-	gluPerspective(45.0f,(GLfloat)w/(GLfloat)h,0.1f,200.0f);
-
-	
 
 glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
 	glClearColor(0.0f,0.0f,0.0f,0.0f);					// Black Background
@@ -220,10 +216,18 @@ void DrawPartSys()
 {
   int loop;
 
-    glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+    glViewport(0,0,w,h);						// Reset The Current Viewport
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+
+	// Calculate The Aspect Ratio Of The Window
+	gluPerspective(45.0f,(GLfloat)w/(GLfloat)h,0.1f,200.0f);
+
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glLoadIdentity();
 
-		gluLookAt(0,0,depthScreen,0,0,0,1,0,0);
+		gluLookAt(0,0,-100,0,0,0,0,1,0);
 
 
 	for (loop=0;loop<MAX_PARTICLES;loop++)					// Loop Through All The Particles
@@ -269,22 +273,21 @@ void DrawPartSys()
 			}
 
 						// If Number Pad 8 And Y Gravity Is Less Than 1.5 Increase Pull Upwards
-			if (keys[VK_NUMPAD8] && (particle[loop].yg<1.5f)) { particle[loop].yg+=0.01f; keys[VK_NUMPAD8] = false; }
+			if (keys[VK_NUMPAD8] && (particle[loop].yg<1.5f)) particle[loop].yg+=0.01f;
 
 			// If Number Pad 2 And Y Gravity Is Greater Than -1.5 Increase Pull Downwards
-			if (keys[VK_NUMPAD2] && (particle[loop].yg>-1.5f)) { particle[loop].yg-=0.01f; keys[VK_NUMPAD2] = false; }
+			if (keys[VK_NUMPAD2] && (particle[loop].yg>-1.5f)) particle[loop].yg-=0.01f;
 
 			// If Number Pad 6 And X Gravity Is Less Than 1.5 Increase Pull Right
-			if (keys[VK_NUMPAD6] && (particle[loop].xg<1.5f)) { particle[loop].xg+=0.01f; keys[VK_NUMPAD6] = false; }
+			if (keys[VK_NUMPAD6] && (particle[loop].xg<1.5f)) particle[loop].xg+=0.01f;
 
 			// If Number Pad 4 And X Gravity Is Greater Than -1.5 Increase Pull Left
-			if (keys[VK_NUMPAD4] && (particle[loop].xg>-1.5f)) { particle[loop].xg-=0.01f; keys[VK_NUMPAD4] = false; }
+			if (keys[VK_NUMPAD4] && (particle[loop].xg>-1.5f)) particle[loop].xg-=0.01f;
 
 			if (keys[VK_F1])
 			{
 			col++;							// Change The Particle Color
 					if (col>11)	col=0;	
-					keys[VK_F1] = false;
 			}
 
 			if (keys[VK_TAB])										// Tab Key Causes A Burst
@@ -295,11 +298,10 @@ void DrawPartSys()
 				particle[loop].xi=float((rand()%50)-26.0f)*10.0f;	// Random Speed On X Axis
 				particle[loop].yi=float((rand()%50)-25.0f)*10.0f;	// Random Speed On Y Axis
 				particle[loop].zi=float((rand()%50)-25.0f)*10.0f;	// Random Speed On Z Axis
-
-				keys[VK_TAB] = false;
 			}
 
-		
+			for (int i=0; i<256;i++)
+				keys[i] = false;
 }
 	}
 }
@@ -607,11 +609,33 @@ void ShowSnake()
 //					emitter->SetState(MAGIC_STATE_UPDATE);
 //				}
 //}
-
-void BindAllTextures(int indx,Texture *PointToarray)
-{
-	addAllTextures(indx,texturePack[0]);
-}
+//void InitLUA()
+//{
+//	 lua_State * lua = lua_openS();
+//
+//    if ( lua == NULL )
+//    {
+//        printf ( "Error creating Lua context.\n" );
+//
+//        return 1;
+//    }
+//	
+//    luaL_openlibs ( lua );                              // open standart libraries
+//                                                        // load and execute a file
+//    if ( luaL_loadfile ( lua, "test-2.lua" ) )
+//        printf ( "Error opening test-2.lua\n" );
+//
+//    lua_pcall       ( lua, 0, LUA_MULTRET, 0 );
+//    lua_getfield    ( lua, LUA_GLOBALSINDEX, "foo" );   // push global function f on stack
+//    lua_pushstring  ( lua, "17" );                      // push first argument on stack
+//    lua_pushinteger ( lua, 3 );                         // push second argument on stack
+//    lua_pcall       ( lua, 2, 1, 0 );                   // call function taking 2 argsuments and getting one return value
+//
+//                                                        // get return value and print it
+//    printf ( "Result: %d\n", lua_tointeger ( lua, -1 ) );
+//
+//    lua_close       ( lua );                            // close Lua context
+//}
 
 void display()
 {
@@ -622,16 +646,16 @@ void display()
 			    //  pLight->SetPosLight(pSnake->GetPosHeadX());
 			   
 
-				// DrawBack(); // есть утечка кучи!!!
-			//	DrawLife(); 
+		    	// DrawBack(); // есть утечка кучи!!!
+				DrawLife(); 
 
-				// ShowSnake(); // есть утечка кучи!!!
+				 ShowSnake(); // есть утечка кучи!!!
 
-				// DrawFruct(); // есть утечка кучи!!!
+				 DrawFruct(); // есть утечка кучи!!!
 
-				 DrawPartSys();
+				// DrawPartSys();
 
-			   //  GameLogic();		
+			     GameLogic();		
 
 			 glutPostRedisplay();
 			 glutSwapBuffers(); 
@@ -658,8 +682,6 @@ void getkeys_down(unsigned char key,int x,int y)
 	case 'd' : keys[VK_NUMPAD4] = true; break;
 	case 'z' : keys[VK_TAB] = true; break;
 	case 'q' : keys[VK_F1] = true; break;
-	case '+' : if (depthScreen < 0) depthScreen = 100; if (depthScreen > 200) depthScreen = 100;   depthScreen -= stepDepthScreen; break;
-	case '-' : if (depthScreen < 0) depthScreen = 100;  depthScreen += stepDepthScreen; break;
 
 
 			
@@ -809,7 +831,6 @@ void GameInit()
 	bonusTexture = new Texture;
 partSysTexture   = new Texture;
 
-
          pFruct = new Fruct();
          pSnake = new Snake(*pFruct);
          pGame  = new Game();
@@ -817,16 +838,15 @@ partSysTexture   = new Texture;
 	     pModel = new Model("C:\\mycube.obj");
 	pLdrTexture = new Quad();
 
-	for(int i=0;i<countTextures; i++)
-	texturePack[i] = new Texture;
-
 	//pLight->OnOffLight(true);
 	pFruct->New();
 
-	pSnake->dx = 10; pSnake->dy = 10;
+	pSnake->dx = 10;
+	pSnake->dy = 10;
 	
 
-	pGameData->FructOnLevel[0] = 5; pGameData->FructOnLevel[1] = 7;
+	pGameData->FructOnLevel[0] = 5;
+	pGameData->FructOnLevel[1] = 7;
 	pGameData->lifes = 4;
 
 	pGame->SetStateGame(GAME);
@@ -843,7 +863,7 @@ partSysTexture   = new Texture;
 		 AddTextura(bonusTexture);
 		 pBonus->DrawBonus();
 	
-		 InitPartSys();
+		// InitPartSys();
 
 	   //InitMagicParticles();
 

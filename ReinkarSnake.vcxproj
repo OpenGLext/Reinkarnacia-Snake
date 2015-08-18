@@ -41,8 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files\Windows Kits\8.0\Include\um\gl;D:\Движки\SFML-2.1\include;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\include\glm;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\Src;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Движки\SFML-2.1\lib;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Движки\lua 5.3\include;C:\Program Files\Windows Kits\8.0\Include\um\gl;D:\Движки\SFML-2.1\include;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\include\glm;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\Src;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Движки\lua 5.3;D:\Движки\SFML-2.1\lib;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

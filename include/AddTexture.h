@@ -4,4 +4,3 @@
 
 
 void AddTextura(Texture* txt);
-void addAllTextures(int indx,Texture *PointToarray);

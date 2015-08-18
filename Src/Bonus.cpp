@@ -1,7 +1,7 @@
 #include "Bonus.h"
 
 
-Bonus::Bonus(void)
+Bonus::Bonus(void):s(25)
 {
 PosBonus.x = 0;
 PosBonus.y = 0;
@@ -19,7 +19,7 @@ void Bonus::DrawBonus()
 		PosBonus.x = rand() % 15;
 	    PosBonus.y = rand() % 15;
 
-	 boxApple(PosBonus.x,PosBonus.y,PosBonus.x+s,PosBonus.y+s);
+	 boxApple(PosBonus.x*s,PosBonus.y*s,(PosBonus.x+1)*s,(PosBonus.y+1)*s);
 }
 
 bool Bonus::EatBonus()

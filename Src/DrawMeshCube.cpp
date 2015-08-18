@@ -13,7 +13,7 @@
 
 			glTexCoord2f(0.0f, 1.0f); glVertex2f(x1,y2);
 
-			glNormal3fv(NormalArrayApple);
+			//glNormal3fv(NormalArrayApple);
 
 
 	glEnd();
