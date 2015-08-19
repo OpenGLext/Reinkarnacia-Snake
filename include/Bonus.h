@@ -12,11 +12,14 @@ public:
 	void DrawBonus();
 	bool EatBonus();
 	void GetPosBonus(glm::vec3 PosBonus);
+	void NewBonus();
+	void SetPosBonus(glm::vec3 *pos_);
+	glm::vec3 PosBonus;
 
 private:
 
 	bool isEat;
 	float s;
-	glm::vec3 PosBonus;
+	
 };
 

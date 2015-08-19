@@ -545,19 +545,28 @@ void DrawBack()
 	//free(pBackTexture->imageData);
 	
 }
+void DrawBonus()
+{
+	 AddTextura(bonusTexture);
+		 pBonus->DrawBonus();
+}
 void GameLogic()
 {
 	 if (deltaTime <= 0.1f || pGame->GetStateGame() == GAMEOVER  ) { pGame->SetStateGame(GAMEOVER); ResetGame(); ShowGameOver(); }  
 		         pBonus->GetPosBonus(posBonus);
 				 pSnake->GetPosHead(posHead);
 
-	 //if (posHead == posBonus) 
-				 //{
-					// /* enable particle system on 5000 ms */
+				 if (posBonus == posHead) 
+				 {
+					/* enable particle system on 5000 ms */
 
 					// StartPartSys = deltaTime;
-				 //
-				 //}
+
+              std::string posstr = GetStr("Collision Bonus: ",1);
+	
+	          ourtext->put(550, 380, 1.0f, posstr.c_str());
+				 
+				 }
 
 
 	        if (pSnake->GetOutWall() && pGameData->lifes == 0) { pGame->SetStateGame(GAMEOVER);  ResetGame(); ShowGameOver(); }
@@ -648,6 +657,8 @@ void display()
 
 		    	// DrawBack(); // есть утечка кучи!!!
 				DrawLife(); 
+
+				DrawBonus();
 
 				 ShowSnake(); // есть утечка кучи!!!
 
@@ -839,7 +850,9 @@ partSysTexture   = new Texture;
 	pLdrTexture = new Quad();
 
 	//pLight->OnOffLight(true);
-	pFruct->New();
+	pFruct->New();  
+	pBonus = new Bonus();
+	pBonus->NewBonus();
 
 	pSnake->dx = 10;
 	pSnake->dy = 10;
@@ -859,9 +872,8 @@ partSysTexture   = new Texture;
 
 	LoadResources();
 
-	     pBonus = new Bonus();
-		 AddTextura(bonusTexture);
-		 pBonus->DrawBonus();
+	  
+		
 	
 		// InitPartSys();
 
