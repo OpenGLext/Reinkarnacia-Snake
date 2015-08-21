@@ -28,7 +28,10 @@ Snake::~Snake(void)
 
 }
 
-
+void Snake::SetLenBody(const int newLen)
+{
+	m_lenbody = newLen;
+}
 bool Snake::IsCollision() const
  {
 	 return m_isCollision;
@@ -123,10 +126,14 @@ void Snake::CheckEatFruct()
 		  pFruct->New();
 	  }
 }
-void Snake::GetPosHead(glm::vec3 poshead)
+glm::vec3 Snake::GetPosHead()
   {
+	  glm::vec3 poshead;
+
 	  poshead.x = s[0].x;
 	  poshead.y = s[0].y;
+
+	  return poshead;
   }
 void Snake::GetPosTail(glm::vec3 posTail_)
 {

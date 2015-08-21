@@ -17,6 +17,7 @@ public:
   void SetCollision(const bool setcol);
   void AddElementBody();
   int  GetLenBody();
+  void SetLenBody(const int newLen);
   void ResetSnake();
   bool isOutWall();
   void SetOutWall(const bool col);
@@ -29,7 +30,7 @@ public:
   void CheckEatFruct();
   void DrawHead();
 
-  void GetPosHead(glm::vec3 poshead);
+  glm::vec3 GetPosHead();
   void GetPosTail(glm::vec3 posTail_);
   void SetPosTail(glm::vec3  posTail_);
 

@@ -41,7 +41,7 @@ bool Bonus::EatBonus()
 	return true;
 }
 
-void Bonus::GetPosBonus(glm::vec3 PosBonus_)
+glm::vec3 Bonus::GetPosBonus()
 {
-	PosBonus_ = PosBonus;
+	return PosBonus;
 }

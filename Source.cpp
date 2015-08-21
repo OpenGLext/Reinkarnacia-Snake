@@ -105,6 +105,7 @@ bool GameOver(false);
 
 int State(GAME);
 int TimeDraw(150);
+int IntervalBonus(5000);
 int StartPartSys(0);
 
 int N=30,M=20;
@@ -547,20 +548,35 @@ void DrawBack()
 }
 void DrawBonus()
 {
-	 AddTextura(bonusTexture);
+	   
+     	 AddTextura(bonusTexture);
 		 pBonus->DrawBonus();
 }
 void GameLogic()
 {
 	 if (deltaTime <= 0.1f || pGame->GetStateGame() == GAMEOVER  ) { pGame->SetStateGame(GAMEOVER); ResetGame(); ShowGameOver(); }  
-		         pBonus->GetPosBonus(posBonus);
-				 pSnake->GetPosHead(posHead);
+		         posBonus = pBonus->GetPosBonus();
+				 posHead = pSnake->GetPosHead();
 
-				 if (posBonus == posHead) 
+				 std::string posstr = GetStr("posHead ",posHead.x);
+	
+	             ourtext->put(550, 380, 1.0f, posstr.c_str());
+
+				 std::string pos_str = GetStr("posBonus ",posBonus.x);
+	
+	             ourtext->put(550, 320, 1.0f, pos_str.c_str());
+
+				 std::string pos_str_ = GetStr("len ",pSnake->GetLenBody());
+	
+	             ourtext->put(550, 300, 1.0f, pos_str_.c_str());
+
+				 if ((posBonus.x != 0 && posHead.x != 0) && (posBonus == posHead)) 
 				 {
 					/* enable particle system on 5000 ms */
 
-					// StartPartSys = deltaTime;
+					int oldLenSnake = pSnake->GetLenBody();
+
+					pSnake->SetLenBody(4);
 
               std::string posstr = GetStr("Collision Bonus: ",1);
 	
@@ -704,18 +720,17 @@ void Drawtimer(int = 1)
 {
 		turn = true;
 
-		//if (StartPartSys != 0)
-		//{
-		//	if (deltaTime < (StartPartSys-5000))
-		//	{
-		//		/* Disable part system */
-
-		//	}
-		//}
 	    deltaTime -= 0.1f;
     	pSnake->Tick();
-       // display();
+  
         glutTimerFunc(TimeDraw, Drawtimer, 1);
+}
+
+void ActionBonus(int = 1 )
+{
+	
+
+	glutTimerFunc(IntervalBonus,ActionBonus,1);
 }
 void keyses(int key,int x,int y)
 {
@@ -910,5 +925,6 @@ glutDisplayFunc (display);
 //glutDisplayFunc(DrawModel);
 glutMouseFunc(Mouse);
 glutTimerFunc(TimeDraw,Drawtimer,1);
+glutTimerFunc(IntervalBonus,ActionBonus,1);
 glutMainLoop();
 }
