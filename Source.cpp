@@ -94,7 +94,7 @@ bool turn(false);
 bool PlayMusicOn(false);
 HDC  hDC;
 
-int static deltaTime(120);
+int static deltaTime(360);
 
 const int StartTime(1);
 int NowTime(0);
@@ -556,20 +556,21 @@ void DrawBack()
 void DrawBonus()
 {
 	   
-//glPushMatrix();
+glPushMatrix();
 
 AddTextura(pTexturePack[4]);
 
-	/*	 glMatrixMode(GL_TEXTURE_MATRIX);
-		 glLoadIdentity();
+		// glMatrixMode(GL_MODELVIEW);
+		// glLoadIdentity();
 		
+		// glScalef(2.25f,2.25f,0);
+		 //glScalef(0.25f,0.25f,0);
+
+pBonus->DrawApple();
+//pBonus->DrawBonus();
+
+		 glPopMatrix();
 		
-		 glRotatef(30,1,1,0);
-
-
-
-		 glPopMatrix();*/
-		 pBonus->DrawBonus();
 }
 void GameLogic()
 {
@@ -577,17 +578,20 @@ void GameLogic()
 		         posBonus = pBonus->GetPosBonus();
 				 posHead = pSnake->GetPosHead();
 
-				 if ((posBonus.x != 0 && posHead.x != 0) && (posBonus == posHead)) 
+				 if ((posBonus.x != 0 && posHead.x != 0)  ) 
 				 {
-					/* enable particle system on 5000 ms */
+					 if (posBonus == posHead)
+					 {
+					   /* enable particle system on 5000 ms */
 
-					int oldLenSnake = pSnake->GetLenBody();
+					   int oldLenSnake = pSnake->GetLenBody();
 
-					pSnake->SetLenBody(4);
+					   pSnake->SetLenBody(4);
 
-              std::string posstr = GetStr("Collision Bonus: ",1);
-	
-	          ourtext->put(550, 380, 1.0f, posstr.c_str());
+					   pBonus->NewBonus();
+
+					 }
+			
 				 
 				 }
 
@@ -671,7 +675,6 @@ void ShowSnake()
 
 void display()
 {
-	//CalcFPS();
 		turn = true;
 
 	    deltaTime -= 1;
@@ -688,7 +691,7 @@ void display()
 		    	// DrawBack(); 
 				DrawLife(); 
 
-				
+				if ( deltaTime % 50 ) { DrawBonus(); }
 
 				 ShowSnake(); 
 
@@ -928,7 +931,7 @@ for(int i=0;i<5;i++)
 	//pLight->OnOffLight(true);
 	pFruct->New();  
 	pBonus = new Bonus();
-	pBonus->NewBonus();
+	pBonus->New();
 
 	pSnake->dx = 10;
 	pSnake->dy = 10;

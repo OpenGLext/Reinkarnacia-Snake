@@ -11,6 +11,13 @@ isEat = false;
 }
 
 
+
+Bonus::Bonus(const Bonus& bn)
+{
+
+}
+
+
 Bonus::~Bonus(void)
 {
 }
@@ -45,3 +52,5 @@ glm::vec3 Bonus::GetPosBonus()
 {
 	return PosBonus;
 }
+
+
