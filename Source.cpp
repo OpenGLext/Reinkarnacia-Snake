@@ -562,18 +562,6 @@ void GameLogic()
 		         posBonus = pBonus->GetPosBonus();
 				 posHead = pSnake->GetPosHead();
 
-				 std::string posstr = GetStr("posHead ",posHead.x);
-	
-	             ourtext->put(550, 380, 1.0f, posstr.c_str());
-
-				 std::string pos_str = GetStr("posBonus ",posBonus.x);
-	
-	             ourtext->put(550, 320, 1.0f, pos_str.c_str());
-
-				 std::string pos_str_ = GetStr("len ",pSnake->GetLenBody());
-	
-	             ourtext->put(550, 300, 1.0f, pos_str_.c_str());
-
 				 if ((posBonus.x != 0 && posHead.x != 0) && (posBonus == posHead)) 
 				 {
 					/* enable particle system on 5000 ms */
