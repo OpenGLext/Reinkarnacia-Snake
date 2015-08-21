@@ -94,9 +94,12 @@ bool turn(false);
 bool PlayMusicOn(false);
 HDC  hDC;
 
-float static deltaTime(60);
+int static deltaTime(120);
 
 const int StartTime(150);
+int NowTime(0);
+int OldTime(0);
+int frame(0);
 const int LOGO = 1;
 const int GAME = 2;
 const int LEVELCOMPLETE = 3;
@@ -108,8 +111,8 @@ bool StartGame(false);
 bool GameOver(false);
 
 int State(GAME);
-int TimeDraw(150);
-int IntervalBonus(5000);
+int TimeDraw(500);
+int IntervalBonus(500);
 int StartPartSys(0);
 
 int N=30,M=20;
@@ -427,10 +430,10 @@ void DrawLife()
 	
 	 ourtext->put(550, 410, 1.0f, life_.c_str());
 
-	 ///
-	// std::string posstr = GetStr("PosHeadX: ",pSnake->GetPosHeadX());
+	 
+	 std::string posstr = GetStr("FPS: ",frame*1000.0/(NowTime - OldTime));
 	
-	// ourtext->put(550, 380, 1.0f, posstr.c_str());
+	 ourtext->put(550, 380, 1.0f, posstr.c_str());
 
 	       /* std::string str_fps = GetStr(" ",abs((num-4)-FructOnLevel[0]));
 		    glColor4f(1.0f,1.0f,0.3f,0.9f);
@@ -553,7 +556,19 @@ void DrawBack()
 void DrawBonus()
 {
 	   
-	AddTextura(pTexturePack[4]);
+//glPushMatrix();
+
+AddTextura(pTexturePack[4]);
+
+	/*	 glMatrixMode(GL_TEXTURE_MATRIX);
+		 glLoadIdentity();
+		
+		
+		 glRotatef(30,1,1,0);
+
+
+
+		 glPopMatrix();*/
 		 pBonus->DrawBonus();
 }
 void GameLogic()
@@ -656,7 +671,9 @@ void ShowSnake()
 
 void display()
 {
+	//CalcFPS();
    ResetGame();
+
   // ChangeProjection();
 				 	
 				 // добавим освещение к голове что бы как фонарик или прожектор светил при движении
@@ -666,7 +683,11 @@ void display()
 		    	// DrawBack(); 
 				DrawLife(); 
 
-				DrawBonus();
+				if (deltaTime % 15 == 0) 
+	               {
+		             DrawBonus();
+	                }
+				
 
 				 ShowSnake(); 
 
@@ -679,6 +700,25 @@ void display()
 			 glutPostRedisplay();
 			 glutSwapBuffers(); 
 	}  
+void CalcFPS()
+{
+	frame++;
+ 
+	NowTime = glutGet(GLUT_ELAPSED_TIME);
+ 
+	if (NowTime - OldTime > 1000) 
+	{
+		//sprintf(title, "RubixGL v2.0 By Blood Angel   FPS: %4.2f",	frame*1000.0/(NowTime - OldTime));
+
+		
+		//glutPostRedisplay();
+
+		OldTime = NowTime;	
+		frame = 0;
+	}
+
+	display();
+}
 void getkeys_down(unsigned char key,int x,int y)
 {
 	switch ( key )
@@ -712,15 +752,20 @@ void Drawtimer(int = 1)
 {
 		turn = true;
 
-	    deltaTime -= 0.1f;
+	    deltaTime -= 1;
     	pSnake->Tick();
+
+    
   
         glutTimerFunc(TimeDraw, Drawtimer, 1);
 }
 
 void ActionBonus(int = 1 )
 {
-	
+	 
+
+
+	 
 
 	glutTimerFunc(IntervalBonus,ActionBonus,1);
 }
@@ -895,7 +940,10 @@ for(int i=0;i<5;i++)
 
 	LoadResources();
 
-	  
+	typedef BOOL (APIENTRY * wglSwapIntervalEXT_Func)(int);
+wglSwapIntervalEXT_Func wglSwapIntervalEXT =
+  wglSwapIntervalEXT_Func(wglGetProcAddress("wglSwapIntervalEXT"));
+if(wglSwapIntervalEXT) wglSwapIntervalEXT(0); // 1 - чтобы включить  
 		
 	
 		// InitPartSys();
@@ -929,10 +977,11 @@ ourtext = new Font(hDC,"times",10,15,30);
 //glutReshapeFunc(resizeWindow);
 glutKeyboardFunc(getkeys_down);
 glutSpecialFunc(keyses);
-glutDisplayFunc (display);
+glutDisplayFunc (CalcFPS);
 //glutDisplayFunc(DrawModel);
 glutMouseFunc(Mouse);
 glutTimerFunc(TimeDraw,Drawtimer,1);
 glutTimerFunc(IntervalBonus,ActionBonus,1);
+
 glutMainLoop();
 }
