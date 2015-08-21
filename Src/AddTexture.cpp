@@ -3,8 +3,8 @@
 
 void AddTextura(Texture* txt)
 {
-     glEnable(GL_TEXTURE_2D);
-	 glGenTextures(1, &txt->texID);
+	glEnable(GL_TEXTURE_2D);
+
      glBindTexture(GL_TEXTURE_2D, txt->texID);
      gluBuild2DMipmaps(GL_TEXTURE_2D, txt->bpp / 8, txt->width, txt->height, txt->type, 
                       GL_UNSIGNED_BYTE, txt->imageData);		

@@ -16,6 +16,9 @@
 #include "include/DrawMeshCube.h"
 #include "include\glm\glm.hpp"
 #include "include\Bonus.h"
+#include <vld.h>
+
+#pragma comment(lib,"vld.lib")
 
 #ifdef	__cplusplus
 extern "C" {
@@ -69,6 +72,7 @@ Texture    *snakeHead;
 Texture    *pBackTexture;
 Texture    *bonusTexture;
 Texture    *partSysTexture;
+Texture    *pTexturePack[5];
 GLfloat  NormalArraySnake[200];
 GLfloat  NormalArrayApple[2];
 
@@ -541,7 +545,7 @@ bool IsLevelComplete()
 }
 void DrawBack()
 {
- 	AddTextura(pBackTexture);
+	AddTextura(pTexturePack[3]);
 	boxFon(0,0,25*30,25*20);
 	//free(pBackTexture->imageData);
 	
@@ -549,7 +553,7 @@ void DrawBack()
 void DrawBonus()
 {
 	   
-     	 AddTextura(bonusTexture);
+	AddTextura(pTexturePack[4]);
 		 pBonus->DrawBonus();
 }
 void GameLogic()
@@ -596,7 +600,7 @@ void GameLogic()
 }
 void DrawFruct()
 {
-		         AddTextura(fructTexture);
+	             AddTextura(pTexturePack[2]);
 				 pFruct->DrawApple();
 }
 void ChangeProjection()
@@ -611,10 +615,10 @@ void ShowSnake()
 {
  
 
-	             AddTextura(snakeHead);
+	             AddTextura(pTexturePack[0]);
 				 pSnake->DrawHead();  
 
-				 AddTextura(snakeTexture);
+				 AddTextura(pTexturePack[1]);
 				 pSnake->DrawSnake();
 }
 //void ShowPartSys(MP_Manager &MP)
@@ -671,14 +675,14 @@ void display()
 			    //  pLight->SetPosLight(pSnake->GetPosHeadX());
 			   
 
-		    	// DrawBack(); // есть утечка кучи!!!
+		    	// DrawBack(); 
 				DrawLife(); 
 
 				DrawBonus();
 
-				 ShowSnake(); // есть утечка кучи!!!
+				 ShowSnake(); 
 
-				 DrawFruct(); // есть утечка кучи!!!
+				 DrawFruct(); 
 
 				// DrawPartSys();
 
@@ -789,6 +793,18 @@ void LoadResources()
 	 pLdrTexture->LoadTexture(pBackTexture,"Data/back.tga"); 
 	 pLdrTexture->LoadTexture(bonusTexture,"Data/bonus.tga"); 
 
+	 pTexturePack[0] = snakeHead;
+	 pTexturePack[1] = snakeTexture;
+	 pTexturePack[2] = fructTexture;
+	 pTexturePack[3] = pBackTexture;
+	 pTexturePack[4] = bonusTexture;
+
+	  for(int i=0;i<5; i++)
+	  {
+	     glEnable(GL_TEXTURE_2D);
+		 glGenTextures(1, &pTexturePack[i]->texID);
+
+	  }
 
 }
 void DrawModel()
@@ -857,6 +873,10 @@ void GameInit()
 	bonusTexture = new Texture;
 partSysTexture   = new Texture;
 
+for(int i=0;i<5;i++)
+{
+  pTexturePack[i] = new Texture;
+}
          pFruct = new Fruct();
          pSnake = new Snake(*pFruct);
          pGame  = new Game();
