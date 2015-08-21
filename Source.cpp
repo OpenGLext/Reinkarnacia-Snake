@@ -96,7 +96,7 @@ HDC  hDC;
 
 int static deltaTime(120);
 
-const int StartTime(150);
+const int StartTime(1);
 int NowTime(0);
 int OldTime(0);
 int frame(0);
@@ -111,8 +111,8 @@ bool StartGame(false);
 bool GameOver(false);
 
 int State(GAME);
-int TimeDraw(500);
-int IntervalBonus(500);
+int TimeDraw(0);
+int IntervalBonus(60);
 int StartPartSys(0);
 
 int N=30,M=20;
@@ -672,6 +672,11 @@ void ShowSnake()
 void display()
 {
 	//CalcFPS();
+		turn = true;
+
+	    deltaTime -= 1;
+    	pSnake->Tick();
+
    ResetGame();
 
   // ChangeProjection();
@@ -683,10 +688,6 @@ void display()
 		    	// DrawBack(); 
 				DrawLife(); 
 
-				if (deltaTime % 15 == 0) 
-	               {
-		             DrawBonus();
-	                }
 				
 
 				 ShowSnake(); 
@@ -705,19 +706,26 @@ void CalcFPS()
 	frame++;
  
 	NowTime = glutGet(GLUT_ELAPSED_TIME);
- 
-	if (NowTime - OldTime > 1000) 
-	{
-		//sprintf(title, "RubixGL v2.0 By Blood Angel   FPS: %4.2f",	frame*1000.0/(NowTime - OldTime));
 
+	/*if (NowTime - OldTime > (deltaTime % 15))
+	               {
+		             DrawBonus();
+					
+					
+	                }*/
+				
+ 
+	if (NowTime - OldTime > 150) 
+	{
 		
-		//glutPostRedisplay();
+		display();
+		
 
 		OldTime = NowTime;	
 		frame = 0;
 	}
 
-	display();
+	glutPostRedisplay();
 }
 void getkeys_down(unsigned char key,int x,int y)
 {
@@ -980,8 +988,8 @@ glutSpecialFunc(keyses);
 glutDisplayFunc (CalcFPS);
 //glutDisplayFunc(DrawModel);
 glutMouseFunc(Mouse);
-glutTimerFunc(TimeDraw,Drawtimer,1);
-glutTimerFunc(IntervalBonus,ActionBonus,1);
+//glutTimerFunc(TimeDraw,Drawtimer,1);
+//glutTimerFunc(IntervalBonus,ActionBonus,1);
 
 glutMainLoop();
 }
