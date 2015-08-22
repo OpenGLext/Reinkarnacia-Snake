@@ -1,10 +1,9 @@
 #pragma once
 #include "DrawMeshCube.h"
-#include "Fruct.h"
 
 
 
-class Bonus : public Fruct
+class Bonus 
 {
 public:
 	Bonus(void);

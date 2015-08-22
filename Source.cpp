@@ -55,13 +55,14 @@ struct GameData
   int FructOnLevel[2];
 };
 
+HGLRC		hRC=NULL;		// Permanent Rendering Context
+HWND		hWnd=NULL;		// Holds Our Window Handle
+HINSTANCE	hInstance;
+HINSTANCE hPrevInstance;
 Font *ourtext;
 sf::SoundBuffer collisionBuff,eatBuff,moveBuff,gameoverBuff,collisionTailBuff;
 sf::Sound collisionSound,eatSound,moveSound,gameoverSound,collisionTail;
 sf::Music backMusic;
-
-
-
 
  bool DEMO = false;
 
@@ -433,7 +434,7 @@ void DrawLife()
 	 
 	 std::string posstr = GetStr("FPS: ",frame*1000.0/(NowTime - OldTime));
 	
-	 ourtext->put(550, 380, 1.0f, posstr.c_str());
+	 //ourtext->put(550, 380, 1.0f, posstr.c_str());
 
 	       /* std::string str_fps = GetStr(" ",abs((num-4)-FructOnLevel[0]));
 		    glColor4f(1.0f,1.0f,0.3f,0.9f);
@@ -566,7 +567,7 @@ AddTextura(pTexturePack[4]);
 		// glScalef(2.25f,2.25f,0);
 		 //glScalef(0.25f,0.25f,0);
 
-pBonus->DrawApple();
+pBonus->DrawBonus();
 //pBonus->DrawBonus();
 
 		 glPopMatrix();
@@ -575,24 +576,27 @@ pBonus->DrawApple();
 void GameLogic()
 {
 	 if (deltaTime <= 0.1f || pGame->GetStateGame() == GAMEOVER  ) { pGame->SetStateGame(GAMEOVER); ResetGame(); ShowGameOver(); }  
-		         posBonus = pBonus->GetPosBonus();
-				 posHead = pSnake->GetPosHead();
 
-				 if ((posBonus.x != 0 && posHead.x != 0)  ) 
+		          posBonus = pBonus->GetPosBonus();
+				  posHead = pSnake->GetPosHead();
+
+				  std::string posstr = GetStr("posHead ",posHead.x);
+				  std::string pos_str = GetStr("posBonus ",posBonus.x);
+
+	             ourtext->put(550, 320, 1.0f, pos_str.c_str());
+                 ourtext->put(550, 380, 1.0f, posstr.c_str());
+
+				 if ((posBonus.x != 0 && posHead.x != 0) && (posBonus == posHead)) 
 				 {
-					 if (posBonus == posHead)
-					 {
 					   /* enable particle system on 5000 ms */
-
-					   int oldLenSnake = pSnake->GetLenBody();
 
 					   pSnake->SetLenBody(4);
 
 					   pBonus->NewBonus();
 
-					 }
+					   std::string posstr = GetStr("Collision Bonus: ",1);
+					   ourtext->put(550, 300, 1.0f, posstr.c_str());
 			
-				 
 				 }
 
 
@@ -672,7 +676,6 @@ void ShowSnake()
 //
 //    lua_close       ( lua );                            // close Lua context
 //}
-
 void display()
 {
 		turn = true;
@@ -769,16 +772,6 @@ void Drawtimer(int = 1)
     
   
         glutTimerFunc(TimeDraw, Drawtimer, 1);
-}
-
-void ActionBonus(int = 1 )
-{
-	 
-
-
-	 
-
-	glutTimerFunc(IntervalBonus,ActionBonus,1);
 }
 void keyses(int key,int x,int y)
 {
@@ -931,7 +924,7 @@ for(int i=0;i<5;i++)
 	//pLight->OnOffLight(true);
 	pFruct->New();  
 	pBonus = new Bonus();
-	pBonus->New();
+	pBonus->NewBonus();
 
 	pSnake->dx = 10;
 	pSnake->dy = 10;
@@ -954,7 +947,7 @@ for(int i=0;i<5;i++)
 	typedef BOOL (APIENTRY * wglSwapIntervalEXT_Func)(int);
 wglSwapIntervalEXT_Func wglSwapIntervalEXT =
   wglSwapIntervalEXT_Func(wglGetProcAddress("wglSwapIntervalEXT"));
-if(wglSwapIntervalEXT) wglSwapIntervalEXT(0); // 1 - чтобы включить  
+if(wglSwapIntervalEXT) wglSwapIntervalEXT(0); // 1 - чтобы включить  vsync
 		
 	
 		// InitPartSys();
@@ -962,13 +955,6 @@ if(wglSwapIntervalEXT) wglSwapIntervalEXT(0); // 1 - чтобы включить
 	   //InitMagicParticles();
 
 }
-
-
-HGLRC		hRC=NULL;		// Permanent Rendering Context
-HWND		hWnd=NULL;		// Holds Our Window Handle
-HINSTANCE	hInstance;
-HINSTANCE hPrevInstance;
-
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,PSTR pCmdLine,int nShowCmd)
 {
 	int argc=0; char** argv=0;
@@ -980,7 +966,7 @@ glutCreateWindow ("Snake v 1.0");
 hWnd = FindWindow(L"GLUT",L"OpenGL Application");
 hDC = GetDC(hWnd);
 
-ourtext = new Font(hDC,"times",10,15,30); 
+  ourtext = new Font(hDC,"times",10,15,30); 
   initGL();
 
   GameInit();
@@ -990,7 +976,7 @@ glutKeyboardFunc(getkeys_down);
 glutSpecialFunc(keyses);
 glutDisplayFunc (CalcFPS);
 //glutDisplayFunc(DrawModel);
-glutMouseFunc(Mouse);
+//glutMouseFunc(Mouse);
 //glutTimerFunc(TimeDraw,Drawtimer,1);
 //glutTimerFunc(IntervalBonus,ActionBonus,1);
 
