@@ -16,6 +16,7 @@
 #include "include/DrawMeshCube.h"
 #include "include\glm\glm.hpp"
 #include "include\Bonus.h"
+#include "Stone.h"
 #include <vld.h>
 
 #pragma comment(lib,"vld.lib")
@@ -67,17 +68,13 @@ sf::Music backMusic;
  bool DEMO = false;
 
 GameData *pGameData;
-Texture    *snakeTexture;
-Texture    *fructTexture;
-Texture    *snakeHead;
-Texture    *pBackTexture;
-Texture    *bonusTexture;
 Texture    *partSysTexture;
-Texture    *pTexturePack[5];
+Texture    *pTexturePack[6];
 GLfloat  NormalArraySnake[200];
 GLfloat  NormalArrayApple[2];
 
 
+Stone *pStone[10];
 Bonus *pBonus;
 Fruct *pFruct;
 Snake *pSnake;
@@ -408,7 +405,7 @@ std::string GetStr(const char* mess,const float value,const int valueInt=0)
 void DrawLife()
 {
 	//ResetGame();
-	
+	glDisable(GL_BLEND);
 	
      glColor4f(0.5f,0.0f,0.9f,1.9f);
 
@@ -549,6 +546,11 @@ bool IsLevelComplete()
 }
 void DrawBack()
 {
+	
+	
+   // glEnable(GL_BLEND);
+   // glBlendFunc(GL_SRC_COLOR, GL_ONE);
+
 	AddTextura(pTexturePack[3]);
 	boxFon(0,0,25*30,25*20);
 	//free(pBackTexture->imageData);
@@ -611,6 +613,21 @@ void GameLogic()
 }
 void DrawFruct()
 {
+	
+
+
+		//		 glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+				// glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+				// glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
+				// glBlendFunc(GL_SRC_COLOR, GL_ONE);
+				 // glBlendFunc(GL_DST_COLOR, GL_ZERO);
+				// glBlendFunc(GL_DST_COLOR, GL_ZERO);
+				// glBlendFunc(GL_ONE, GL_ONE);
+				// glBlendFunc(GL_SRC_COLOR, GL_ONE);
+	//glDisable(GL_BLEND);
+
 	             AddTextura(pTexturePack[2]);
 				 pFruct->DrawApple();
 }
@@ -624,13 +641,24 @@ void ChangeProjection()
 }
 void ShowSnake()
 {
- 
+                //   glEnable(GL_BLEND);
+				  // glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                 //  glBlendFunc(GL_SRC_COLOR, GL_ONE);
+	//glDisable(GL_BLEND);
 
 	             AddTextura(pTexturePack[0]);
 				 pSnake->DrawHead();  
 
 				 AddTextura(pTexturePack[1]);
 				 pSnake->DrawSnake();
+}
+void DrawStone()
+{
+
+	AddTextura(pTexturePack[5]);
+	 for(int i=0;i<10;i++)
+	pStone[i]->DrawStone();
+
 }
 //void ShowPartSys(MP_Manager &MP)
 //{
@@ -691,14 +719,16 @@ void display()
 			    //  pLight->SetPosLight(pSnake->GetPosHeadX());
 			   
 
-		    	// DrawBack(); 
+		    	 
 				DrawLife(); 
-
+			//	DrawBack(); 
 				if ( deltaTime % 50 ) { DrawBonus(); }
 
 				 ShowSnake(); 
 
 				 DrawFruct(); 
+
+				 DrawStone();
 
 				// DrawPartSys();
 
@@ -824,19 +854,15 @@ void LoadResources()
 	 if (!gameoverBuff.loadFromFile("Data/gong.wav"))
 	                                                          {MessageBox(0,L"Not found gameover.wav file",L"info",MB_OK);}
 
-     pLdrTexture->LoadTexture(snakeTexture,"Data/body.tga");
-	 pLdrTexture->LoadTexture(fructTexture,"Data/Apple-2.tga");
-	 pLdrTexture->LoadTexture(snakeHead,"Data/head.tga");
-	 pLdrTexture->LoadTexture(pBackTexture,"Data/back.tga"); 
-	 pLdrTexture->LoadTexture(bonusTexture,"Data/bonus.tga"); 
+	 
+	 pLdrTexture->LoadTexture(pTexturePack[0],"Data/head.tga");
+	 pLdrTexture->LoadTexture(pTexturePack[1],"Data/body.tga");
+     pLdrTexture->LoadTexture(pTexturePack[2],"Data/Apple-2.tga");
+     pLdrTexture->LoadTexture(pTexturePack[3],"Data/back.tga"); 
+	 pLdrTexture->LoadTexture(pTexturePack[4],"Data/bonus.tga");
+	 pLdrTexture->LoadTexture(pTexturePack[5],"Data/stone.tga");
 
-	 pTexturePack[0] = snakeHead;
-	 pTexturePack[1] = snakeTexture;
-	 pTexturePack[2] = fructTexture;
-	 pTexturePack[3] = pBackTexture;
-	 pTexturePack[4] = bonusTexture;
-
-	  for(int i=0;i<5; i++)
+	  for(int i=0;i<6; i++)
 	  {
 	     glEnable(GL_TEXTURE_2D);
 		 glGenTextures(1, &pTexturePack[i]->texID);
@@ -903,14 +929,9 @@ void GameInit()
 	//glBlendFunc(GL_SRC_COLOR, GL_ONE);
 
 	   pGameData = new GameData;
-	snakeTexture = new Texture;
-	fructTexture = new Texture;
-	   snakeHead = new Texture;
-    pBackTexture = new Texture;
-	bonusTexture = new Texture;
 partSysTexture   = new Texture;
 
-for(int i=0;i<5;i++)
+for(int i=0;i<6;i++)
 {
   pTexturePack[i] = new Texture;
 }
@@ -920,11 +941,22 @@ for(int i=0;i<5;i++)
          pLight = new Light();
 	     pModel = new Model("C:\\mycube.obj");
 	pLdrTexture = new Quad();
+         pBonus = new Bonus();
+
+		 for(int i=0;i<10;i++)
+		 pStone[i] = new Stone();
 
 	//pLight->OnOffLight(true);
 	pFruct->New();  
-	pBonus = new Bonus();
+	
 	pBonus->NewBonus();
+
+	 for(int i=0;i<9;i++)
+	 {
+		 pStone[i]->NewStone();
+		 if ((pStone[i]->GetPosStone().x+150) == (pStone[i+1]->GetPosStone().x+150)) { pStone[i]->NewStone(); pStone[i+1]->NewStone(); }
+	 }
+	
 
 	pSnake->dx = 10;
 	pSnake->dy = 10;
