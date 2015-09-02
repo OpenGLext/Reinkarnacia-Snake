@@ -561,6 +561,7 @@ for(int i=0;i<6;i++)
          pGame  = new Game();
 	pLdrTexture = new Quad();
          pBonus = new Bonus();
+		 pStone = new Stone();
 
 	pGameData->FructOnLevel[0] = 5;
 	pGameData->FructOnLevel[1] = 7;

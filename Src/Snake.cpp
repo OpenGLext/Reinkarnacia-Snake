@@ -200,7 +200,7 @@ void Snake::DrawSnake()
 	 glDisable(GL_TEXTURE_2D);
  
  }
-bool Snake::CheckCollisionStone(glm::vec3 posStone)
+bool Snake::CheckCollisionStone(vec2 posStone)
 {
 	if ( (this->GetPosHeadEnd().x <= (posStone.x + 36))  && ( this->GetPosHeadEnd().y <= posStone.y + 36))  return true; //&& 
 		//( this->GetPosHead().x <= (posStone.x + 1 + 35)) &&

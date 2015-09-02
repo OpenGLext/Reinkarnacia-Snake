@@ -3,6 +3,12 @@
 #include "DrawMeshCube.h"
 #include "Fruct.h"
 
+typedef struct vec2
+{
+	int x;
+	int y;
+};
+
 class Stone : public Fruct
 {
 public:
@@ -14,18 +20,20 @@ public:
 
 	void NewStone();
 	void DrawStone();
-	void SetPos(glm::vec3 pos);
+	void SetPos(vec2 pos);
 	int GetWidth();
-	glm::vec3 GetStartPosStone();
-	glm::vec3 GetEndPosStone();
+	vec2 GetStartPosStone();
+	vec2 GetEndPosStone();
 	void SetFlagStone(const bool onoff, const int indx);
 
 	int s;
 
 private:
 
+	
+   vec2 StartPosStone,EndPosStone;
 
-	glm::vec3 StartPosStone,EndPosStone;
+	
 	bool onOffStone[10];
 	
 

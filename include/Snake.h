@@ -31,7 +31,7 @@ public:
   void SetHeadWithTail(const bool f);
   void CheckHeadWithTail();
   void CheckEatFruct();
-  bool CheckCollisionStone(glm::vec3 posStone);
+  bool CheckCollisionStone(vec2 posStone);
   void DrawHead();
 
   glm::vec3 GetPosHeadBegin();

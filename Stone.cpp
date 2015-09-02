@@ -4,9 +4,9 @@
 
 Stone::Stone(void):s(35)
 {
-	s = 35;
+	s = 35; 
 }
-void Stone::SetPos(glm::vec3 pos)
+void Stone::SetPos(vec2 pos)
 {
 	StartPosStone = pos;
 }
@@ -17,25 +17,26 @@ int Stone::GetWidth()
 }
 void Stone::NewStone()
 {
-
 	    srand(time(0));
 
+	StartPosStone.x = rand()  % 120;
+	StartPosStone.y = rand()  % 120;
 
+	EndPosStone.x = StartPosStone.x; 
+	EndPosStone.y = StartPosStone.y;
 
-		StartPosStone.x = rand()  % 150;
-		StartPosStone.y = rand()  % 150;
 		this->SetPos(StartPosStone);
 
 		for(int i=0; i<10;i++)
 		onOffStone[i] = true;
 	
 }
-glm::vec3 Stone::GetStartPosStone()
+vec2 Stone::GetStartPosStone()
 {
 	return StartPosStone;
 
 }
-glm::vec3 Stone::GetEndPosStone()
+vec2 Stone::GetEndPosStone()
 {
 	return EndPosStone;
 
