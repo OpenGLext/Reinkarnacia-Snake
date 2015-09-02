@@ -19,8 +19,6 @@
 #pragma comment(lib,"/freeglut.lib")
 #pragma comment(lib,"/sfml-audio-d.lib")
 
-
-
 struct GameData
 {
   int Score;
@@ -56,7 +54,6 @@ HDC  hDC;
 
 int static deltaTime(360);
 
-const int StartTime(1);
 int NowTime(0);
 int OldTime(0);
 int frame(0);
@@ -71,18 +68,12 @@ bool StartGame(false);
 bool GameOver(false);
 
 int State(GAME);
-int TimeDraw(0);
-int IntervalBonus(60);
 
 int N=30,M=20;
 int Scale=25;
 
 int w = Scale*N;
 int h = Scale*M;
-
-static float i(1.0f);
-static float j(1.0f);
-glm::vec3 posHead,posBonus;
 
 void ResetGame()
 {
@@ -119,7 +110,7 @@ std::string GetStr(const char* mess,const float value,const int valueInt=0)
 	 
 	return ScoreFloat;
 }
-void DrawLife()
+void DrawHUD()
 {
 	//ResetGame();
 	//glDisable(GL_BLEND);
@@ -170,7 +161,7 @@ void DrawLife()
 void ShowGameOver()
 {
 	 ResetGame();
-	 TimeDraw = 3000;
+	
 	 backMusic.stop();
 	 collisionSound.stop(); 
 	 eatSound.stop();
@@ -185,87 +176,13 @@ void ShowGameOver()
 	 ourtext->put(300, 300, 1.0f, "End Level, retry again");
 
 	 glColor4f(0.0f,1.0f,0.0f,0.9f);
+
 	 ourtext->put(300, 250, 1.0f, "Press <g> to Start or <Esc> to Exit...");
 
 	 deltaTime = 60;
 	 
 	
 	
-}
-void ShowMenu()
-{
-	glEnable(GL_BLEND);
-	float FonMenuX(200.0f),FonMenuY(90.0f),FonMenuX2(550.0f),FonMenuY2(450.0f);
-	float WidthMenu(350.0f);
-	float HeightMenu(360.0f);
-	float StartButtonX(220.0f); float StartButtonY(350.0f); float StartButtonX2(530.0f); float StartButtonY2(400.0f);
-	float WidthButtonStart(310.0f); float HeightButtonStart(50.0f);
-
-    	/*-------------------
-	       фон рамка меню
-	       ------------------*/
-	glColor4f(0.5f,0.5f,0.5f,0.5f);
-	glRectf(FonMenuX, FonMenuY, FonMenuX + WidthMenu, FonMenuY + HeightMenu);
-	/*-------------------
-	       кнопка старт
-	       ------------------*/
-	glColor4f(0.0f,1.0f,0.0f,0.3f);
-	glRectf(StartButtonX, StartButtonY-20, StartButtonX + WidthButtonStart, StartButtonY + HeightButtonStart); 
-	/*-------------------
-	       кнопка старт
-	       ------------------*/
-	/*-------------------
-	       текст для кнопки старт
-	       ------------------*/
-	
-     glColor4f(0.0f,0.0f,0.3f,0.9f);
-     ourtext->put(290, 365, 1.0f, "Start Game");
-	 
-}
-bool TargetInButton(int x, int y)
-{
-	float xmin(220.0f); float xmax(530.0f); float ymin(350.0f); float ymax(400.0f);
-
-	if ( x >= xmin && x <= xmax) 
-		{
-			if ( ((y+260.0f)  >= ymin) && ((y +260.0f) <= ymax))
-			{
-               return true;
-			}
-	}
-
-	return false;
-}
-bool IsLevelComplete()
-{
-	if ( (pSnake->GetLenBody() - 4) == pGameData->FructOnLevel[0]  )
-	{
-      // State = LEVELCOMPLETE;
-	   pGameData->level += 1;
-	   //FructOnLevel[0] = 7;
-	   TimeDraw = 30;
-	   glColor3f(0.0f,1.0f,0.0f);
-	   ourtext->put(300,300,1.0f,"Level is complete...");
-	   //LastScore = FructOnLevel[0] * 100;
-	   pGameData->FructOnLevel[0] = rand() % 10;
-	 //  ShadowFructs = FructOnLevel[0];
-       return true;
-	   
-	}
-
-	//if ( (num - 4) == FructOnLevel[1]  )
-	//{
- //     // State = LEVELCOMPLETE;
-	//   level = 3;
-	//   //FructOnLevel[0] = 7;
-	//     glColor3f(0.0f,1.0f,0.0f);
-	//   ourtext->put(300,300,1.0f,"Level is complete...");
-	//   TimeDraw = 80;
-	//   LastScore = FructOnLevel[1] * 100;
- //      return true;
-	//   
-	//}
-	return false;
 }
 void DrawBack()
 {
@@ -302,7 +219,7 @@ void GameLogic()
 {
 	 if (deltaTime <= 0.1f || pGame->GetStateGame() == GAMEOVER  ) { pGame->SetStateGame(GAMEOVER); ResetGame(); ShowGameOver(); }  
 
-				 if ((posBonus.x != 0 && posHead.x != 0) && (posBonus == posHead)) 
+	 if ((pBonus->GetPosBonus().x != 0 && pSnake->GetPosHeadEnd().x != 0) && (pBonus->GetPosBonus() == pSnake->GetPosHeadBegin())) 
 				 {
 					   /* enable particle system on 5000 ms */
 
@@ -378,25 +295,18 @@ void display()
 		turn = true;
 	    deltaTime -= 1;
     	pSnake->Tick();
+
    ResetGame();
-  // ChangeProjection(); //for part system
-				 	
-				 // добавим освещение к голове что бы как фонарик или прожектор светил при движении
-			    //  pLight->SetPosLight(pSnake->GetPosHeadX());
+
+   DrawField();
+
 			//	DrawBack(); 
 				if ( deltaTime % 50 ) { DrawBonus(); }
-
 				 ShowSnake(); 
-  DrawLife(); 
+                 DrawHUD(); 
 				 DrawFruct(); 
-
-               
-
 				 DrawStone();
-
-				// DrawPartSys();
-			     GameLogic();		
-
+			     GameLogic();	
 			 glutPostRedisplay();
 			 glutSwapBuffers(); 
 	}  
@@ -414,7 +324,7 @@ void CalcFPS()
 	                }*/
 				
  
-	if (NowTime - OldTime > 250) 
+	if (NowTime - OldTime > 150) 
 	{
 		
 		display();
@@ -430,28 +340,15 @@ void getkeys_down(unsigned char key,int x,int y)
 {
 	switch ( key )
 	{
-	case 'g' : { pGame->SetStateGame(GAME); pGameData->lifes = 3; pGame->SetScore(0); pGameData->Score = 0; pSnake->ResetSnake();  TimeDraw = StartTime; } break;
-	case 'm' : pGame->SetStateGame(STARTMENU); ShowMenu(); break;
+	case 'g' : { pGame->SetStateGame(GAME); deltaTime = 360; pGameData->lifes = 3; pGame->SetScore(0); pGameData->Score = 0; pSnake->ResetSnake(); } break;
 	case '1' : glBlendFunc(GL_SRC_ALPHA, GL_ONE); break;
 	case '2' : glBlendFunc(GL_ONE, GL_ONE); break;
 	case '3' : glBlendFunc(GL_DST_COLOR, GL_ZERO); break;
 	case '4' : glBlendFunc(GL_SRC_COLOR, GL_ONE); break;
 	case '5' : glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE); break;
     case 'b' : glEnable(GL_BLEND); glBlendFunc(GL_ZERO,  GL_SRC_ALPHA_SATURATE); break;
-	case 't' : TimeDraw -= 10.0f; break;
-	case 27  : exit(0); break; //State = STARTMENU; ResetGame(); lifes = 3; break;  //exit(0); break;
+	case 27  : exit(0); break; 
 }
-}
-void Drawtimer(int = 1)
-{
-		turn = true;
-
-	    deltaTime -= 1;
-    	pSnake->Tick();
-
-    
-  
-        glutTimerFunc(TimeDraw, Drawtimer, 1);
 }
 void keyses(int key,int x,int y)
 {
@@ -465,28 +362,8 @@ void keyses(int key,int x,int y)
 
 		  case GLUT_KEY_RIGHT : if ( pGame->GetStateGame() == GAME ) {if (pSnake->GetDir() != 1 && turn) {pSnake->SetDir(2); turn = false;}}  break;
 
-		   case GLUT_KEY_F1 :    TimeDraw -= 0.25f; glutTimerFunc(TimeDraw,Drawtimer,1); break;
-
-           case GLUT_KEY_F2 :    TimeDraw += 0.25f; glutTimerFunc(TimeDraw,Drawtimer,1); break;	
 
 	}
-}
-void Mouse(int state,int button,int x,int y)
-{
-
-
-	if ( button == GLUT_LEFT_BUTTON  && state == GLUT_DOWN)
-	{
-      if (TargetInButton(x, y))
-	{
-                    // logFile<< LogSpace::color("gray") << LogSpace::color("green") << "Is target in button!!! " <<"x "<< x<<"y "<<y << LogSpace::endl;
-			  
-		pGame->SetStateGame(GAME);
-	}
-
-	}
-
-	
 }
 void LoadResources()
 {
@@ -560,7 +437,6 @@ for(int i=0;i<6;i++)
 
 	pGame->SetStateGame(GAME);
 
-	TimeDraw = StartTime;
 	pFruct->New();  
 	pBonus->NewBonus();
 
