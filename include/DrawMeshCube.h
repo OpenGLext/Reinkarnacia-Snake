@@ -2,8 +2,7 @@
 #include "D:\\Движки\freeglut-2.8.1\include\GL\freeglut.h"
 #include "glm\glm.hpp"
 
- extern GLfloat  NormalArraySnake[200];
- extern GLfloat  NormalArrayApple[2];
+ 
 
  void boxSnake(float x1, float y1, float x2, float y2);
  void boxApple(float x1, float y1, float x2, float y2);

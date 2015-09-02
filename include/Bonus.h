@@ -3,20 +3,25 @@
 
 
 
-class Bonus
+class Bonus 
 {
 public:
 	Bonus(void);
 	~Bonus(void);
+	Bonus::Bonus(const Bonus& bn);
 
 	void DrawBonus();
 	bool EatBonus();
-	void GetPosBonus(glm::vec3 PosBonus);
+	glm::vec3 GetPosBonus();
+	void NewBonus();
+	void SetPosBonus(glm::vec3 *pos_);
+	glm::vec3 PosBonus;
+	
 
 private:
 
 	bool isEat;
 	float s;
-	glm::vec3 PosBonus;
+	
 };
 

@@ -15,13 +15,13 @@ public:
 	
 	void SetPos(glm::vec3 *pos_);
 	glm::vec3 GetPos();
-	void DrawApple();
-	void New();
+     void DrawApple(glm::vec3 *drwpos);
+	virtual void New();
 
-    
+    glm::vec3 m_pos;
 
 private:
-	glm::vec3 m_pos;
+	
 	float scale;
 	Texture fructTexture;
 	

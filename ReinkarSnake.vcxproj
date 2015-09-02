@@ -41,8 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files\Windows Kits\8.0\Include\um\gl;D:\Движки\SFML-2.1\include;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\include\glm;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\Src;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Движки\SFML-2.1\lib;D:\Reinkarnacia Snake\ReinkarSnake\ReinkarSnake\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Движки\lua 5.3\include;C:\Program Files\Windows Kits\8.0\Include\um\gl;D:\Движки\SFML-2.1\include;D:\GitHub\Reinkarnacia Snake\Reinkarnacia-Snake\include\glm;D:\GitHub\Reinkarnacia Snake\Reinkarnacia-Snake\Src;D:\GitHub\Reinkarnacia Snake\Reinkarnacia-Snake\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Движки\lua 5.3;D:\Движки\SFML-2.1\lib;D:\GitHub\Reinkarnacia Snake\Reinkarnacia-Snake\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -87,10 +87,9 @@
     <ClCompile Include="Src\DrawMeshCube.cpp" />
     <ClCompile Include="Src\Fruct.cpp" />
     <ClCompile Include="Src\Game.cpp" />
-    <ClCompile Include="Src\Light.cpp" />
-    <ClCompile Include="Src\model.cpp" />
     <ClCompile Include="Src\Quad.cpp" />
     <ClCompile Include="Src\Snake.cpp" />
+    <ClCompile Include="Stone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AddTexture.h" />
@@ -99,12 +98,10 @@
     <ClInclude Include="include\Font.h" />
     <ClInclude Include="include\Fruct.h" />
     <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\geometry.h" />
-    <ClInclude Include="include\Light.h" />
     <ClInclude Include="include\LogSystem.h" />
-    <ClInclude Include="include\model.h" />
     <ClInclude Include="include\Quad.h" />
     <ClInclude Include="include\Snake.h" />
+    <ClInclude Include="Stone.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

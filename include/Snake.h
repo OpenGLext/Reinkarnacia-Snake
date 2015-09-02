@@ -3,6 +3,9 @@
 #include "Fruct.h"
 #include "DrawMeshCube.h"
 #include "glm\glm.hpp"
+#include "..\Stone.h"
+
+class Stone;
 
 class Snake
 {
@@ -17,6 +20,7 @@ public:
   void SetCollision(const bool setcol);
   void AddElementBody();
   int  GetLenBody();
+  void SetLenBody(const int newLen);
   void ResetSnake();
   bool isOutWall();
   void SetOutWall(const bool col);
@@ -27,9 +31,11 @@ public:
   void SetHeadWithTail(const bool f);
   void CheckHeadWithTail();
   void CheckEatFruct();
+  bool CheckCollisionStone(vec2 posStone);
   void DrawHead();
 
-  void GetPosHead(glm::vec3 poshead);
+  glm::vec3 GetPosHeadBegin();
+  glm::vec3 GetPosHeadEnd();
   void GetPosTail(glm::vec3 posTail_);
   void SetPosTail(glm::vec3  posTail_);
 
@@ -47,6 +53,7 @@ private:
 	bool m_isCollision;
 	bool m_outwall;
 	bool m_isHeadWithTail;
+	Stone stone;
 	
 	glm::vec3 s[100];
     glm::vec3 fructpos;
