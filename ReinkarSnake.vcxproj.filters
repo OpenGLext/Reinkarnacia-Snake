@@ -30,12 +30,6 @@
     <ClCompile Include="Src\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Light.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Quad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -65,16 +59,7 @@
     <ClInclude Include="include\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\geometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Light.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\LogSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Quad.h">

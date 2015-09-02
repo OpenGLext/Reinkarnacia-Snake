@@ -15,13 +15,13 @@ int Stone::GetWidth()
 	return s;
 
 }
-void Stone::NewStone(glm::vec3 StartPosStone_)
+void Stone::NewStone()
 {
 
 	    srand(time(0));
 
-		StartPosStone = StartPosStone_; StartPosStone = StartPosStone_;
-		EndPosStone.x = 0; EndPosStone.y = 0;
+
+
 		StartPosStone.x = rand()  % 150;
 		StartPosStone.y = rand()  % 150;
 		this->SetPos(StartPosStone);

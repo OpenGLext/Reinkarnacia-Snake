@@ -12,7 +12,7 @@ public:
 	virtual void New();
 	
 
-	void NewStone(glm::vec3 StartPosStone_);
+	void NewStone();
 	void DrawStone();
 	void SetPos(glm::vec3 pos);
 	int GetWidth();

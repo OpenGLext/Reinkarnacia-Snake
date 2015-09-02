@@ -87,8 +87,6 @@
     <ClCompile Include="Src\DrawMeshCube.cpp" />
     <ClCompile Include="Src\Fruct.cpp" />
     <ClCompile Include="Src\Game.cpp" />
-    <ClCompile Include="Src\Light.cpp" />
-    <ClCompile Include="Src\model.cpp" />
     <ClCompile Include="Src\Quad.cpp" />
     <ClCompile Include="Src\Snake.cpp" />
     <ClCompile Include="Stone.cpp" />
@@ -100,10 +98,7 @@
     <ClInclude Include="include\Font.h" />
     <ClInclude Include="include\Fruct.h" />
     <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\geometry.h" />
-    <ClInclude Include="include\Light.h" />
     <ClInclude Include="include\LogSystem.h" />
-    <ClInclude Include="include\model.h" />
     <ClInclude Include="include\Quad.h" />
     <ClInclude Include="include\Snake.h" />
     <ClInclude Include="Stone.h" />
