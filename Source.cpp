@@ -302,15 +302,6 @@ void GameLogic()
 {
 	 if (deltaTime <= 0.1f || pGame->GetStateGame() == GAMEOVER  ) { pGame->SetStateGame(GAMEOVER); ResetGame(); ShowGameOver(); }  
 
-		          posBonus = pBonus->GetPosBonus();
-				  posHead = pSnake->GetPosHeadBegin();
-
-				  std::string posstr = GetStr("posHead ",posHead.x);
-				  std::string pos_str = GetStr("posBonus ",posBonus.x);
-
-	             ourtext->put(550, 320, 1.0f, pos_str.c_str());
-                 ourtext->put(550, 380, 1.0f, posstr.c_str());
-
 				 if ((posBonus.x != 0 && posHead.x != 0) && (posBonus == posHead)) 
 				 {
 					   /* enable particle system on 5000 ms */
@@ -519,7 +510,7 @@ void LoadResources()
      pLdrTexture->LoadTexture(pTexturePack[2],"Data/Apple-2.tga");
      pLdrTexture->LoadTexture(pTexturePack[3],"Data/back.tga"); 
 	 pLdrTexture->LoadTexture(pTexturePack[4],"Data/bonus.tga");
-	 pLdrTexture->LoadTexture(pTexturePack[5],"Data/stone2.tga");
+	 pLdrTexture->LoadTexture(pTexturePack[5],"Data/stone.tga");
 
 	  for(int i=0;i<6; i++)
 	  {
