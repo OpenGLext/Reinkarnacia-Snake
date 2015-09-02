@@ -27,7 +27,6 @@ Snake::~Snake(void)
 	delete pFruct;
 
 }
-
 void Snake::SetLenBody(const int newLen)
 {
 	m_lenbody = newLen;
@@ -126,12 +125,21 @@ void Snake::CheckEatFruct()
 		  pFruct->New();
 	  }
 }
-glm::vec3 Snake::GetPosHead()
+glm::vec3 Snake::GetPosHeadEnd()
   {
 	  glm::vec3 poshead;
 
-	  poshead.x = s[0].x;
-	  poshead.y = s[0].y;
+	  poshead.x = (s[0].x + 0.99) * Scale;
+	  poshead.y = (s[0].y + 0.99) * Scale;
+
+	  return poshead;
+  }
+glm::vec3 Snake::GetPosHeadBegin()
+  {
+	  glm::vec3 poshead;
+
+	  poshead.x = s[0].x ;
+	  poshead.y = s[0].y ;
 
 	  return poshead;
   }
@@ -176,7 +184,6 @@ void Snake::Tick()
 	this->CheckHeadWithTail();
 	this->CheckEatFruct();
 }
-
 void Snake::DrawHead()
 {
 	 
@@ -193,3 +200,14 @@ void Snake::DrawSnake()
 	 glDisable(GL_TEXTURE_2D);
  
  }
+bool Snake::CheckCollisionStone(glm::vec3 posStone)
+{
+	if ( (this->GetPosHeadEnd().x <= (posStone.x + 36))  && ( this->GetPosHeadEnd().y <= posStone.y + 36))  return true; //&& 
+		//( this->GetPosHead().x <= (posStone.x + 1 + 35)) &&
+		//( this->GetPosHead().y >= (posStone.y +1 + 35))) return true;
+
+	//if ( (s[0].x == stone.GetPosStone().x + stone.GetWidth()) && ( s[0].y == stone.GetPosStone().y + stone.GetWidth())) return true;
+	//if ( (s[0].x < stone.GetPosStone().x + stone.GetWidth()) && (s[0].y < stone.GetPosStone().y+stone.GetWidth() && (s[0].y > stone.GetPosStone().y)) ) return true;
+	else return false;
+
+}

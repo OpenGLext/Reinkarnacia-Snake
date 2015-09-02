@@ -17,9 +17,10 @@
 #include "include\glm\glm.hpp"
 #include "include\Bonus.h"
 #include "Stone.h"
-#include <vld.h>
+//#include <vld.h>
+//#include "include\Animation.h"
 
-#pragma comment(lib,"vld.lib")
+//#pragma comment(lib,"vld.lib")
 
 #ifdef	__cplusplus
 extern "C" {
@@ -72,9 +73,11 @@ Texture    *partSysTexture;
 Texture    *pTexturePack[6];
 GLfloat  NormalArraySnake[200];
 GLfloat  NormalArrayApple[2];
+const int maxStones = 10;
+glm::vec3      PosStones[maxStones];
 
 
-Stone *pStone[10];
+Stone *pStone;
 Bonus *pBonus;
 Fruct *pFruct;
 Snake *pSnake;
@@ -82,6 +85,7 @@ Game  *pGame;
 Light *pLight;
 Model *pModel;
 Quad  *pLdrTexture;
+//Animation *pAnim;
 std::vector<int> face(1);
 Vec3f v0;
 int  arrayIndex[1];
@@ -405,7 +409,7 @@ std::string GetStr(const char* mess,const float value,const int valueInt=0)
 void DrawLife()
 {
 	//ResetGame();
-	glDisable(GL_BLEND);
+	//glDisable(GL_BLEND);
 	
      glColor4f(0.5f,0.0f,0.9f,1.9f);
 
@@ -429,9 +433,15 @@ void DrawLife()
 	 ourtext->put(550, 410, 1.0f, life_.c_str());
 
 	 
-	 std::string posstr = GetStr("FPS: ",frame*1000.0/(NowTime - OldTime));
+	// std::string posstr = GetStr("FPS: ",frame*1000.0/(NowTime - OldTime));
+
+	 std::string posstr = GetStr("Stone StartX ",pStone->GetStartPosStone().x);
 	
-	 //ourtext->put(550, 380, 1.0f, posstr.c_str());
+	 ourtext->put(550, 360, 1.0f, posstr.c_str());
+
+	std::string posstr2 = GetStr("posHeadEndX ",pSnake->GetPosHeadEnd().x);
+
+	  ourtext->put(550, 330, 1.0f, posstr2.c_str());
 
 	       /* std::string str_fps = GetStr(" ",abs((num-4)-FructOnLevel[0]));
 		    glColor4f(1.0f,1.0f,0.3f,0.9f);
@@ -580,7 +590,7 @@ void GameLogic()
 	 if (deltaTime <= 0.1f || pGame->GetStateGame() == GAMEOVER  ) { pGame->SetStateGame(GAMEOVER); ResetGame(); ShowGameOver(); }  
 
 		          posBonus = pBonus->GetPosBonus();
-				  posHead = pSnake->GetPosHead();
+				  posHead = pSnake->GetPosHeadBegin();
 
 				  std::string posstr = GetStr("posHead ",posHead.x);
 				  std::string pos_str = GetStr("posBonus ",posBonus.x);
@@ -601,13 +611,16 @@ void GameLogic()
 			
 				 }
 
-
+			if (pSnake->CheckCollisionStone(pStone->GetStartPosStone())) { collisionSound.play(); if (pGameData->lifes == 0) { pGame->SetStateGame(GAMEOVER); ShowGameOver(); } else pGameData->lifes -= 1; }
+				
 	        if (pSnake->GetOutWall() && pGameData->lifes == 0) { pGame->SetStateGame(GAMEOVER);  ResetGame(); ShowGameOver(); }
 	        if (pSnake->GetOutWall() && pGameData->lifes != 0) { collisionSound.play(); pGame->SetLife(pGameData->lifes -= 1); pGameData->Score = 0; 
 			                                                     pSnake->SetOutWall(false); }					
 											
 			if (pSnake->IsCollision())       {  eatSound.play(); pGame->SetScore(pGameData->Score += 100); pSnake->SetCollision(false);  }
 			if (pSnake->GetIsHeadWithTail()) { pGameData->Score = 0; pSnake->ResetSnake(); pSnake->SetHeadWithTail(false); }	
+
+
 
 
 }
@@ -629,7 +642,7 @@ void DrawFruct()
 	//glDisable(GL_BLEND);
 
 	             AddTextura(pTexturePack[2]);
-				 pFruct->DrawApple();
+				 pFruct->DrawApple(NULL);
 }
 void ChangeProjection()
 {
@@ -655,9 +668,13 @@ void ShowSnake()
 void DrawStone()
 {
 
-	AddTextura(pTexturePack[5]);
-	 for(int i=0;i<10;i++)
-	pStone[i]->DrawStone();
+	 
+	// for(int i=0;i<10;i++)
+	//glEnable(GL_BLEND);
+AddTextura(pTexturePack[5]);
+		 //pStone->DrawStone();
+//pStone->DrawApple(&pStone->GetPosStone());
+pStone->DrawStone();
 
 }
 //void ShowPartSys(MP_Manager &MP)
@@ -707,31 +724,25 @@ void DrawStone()
 void display()
 {
 		turn = true;
-
 	    deltaTime -= 1;
     	pSnake->Tick();
-
    ResetGame();
-
-  // ChangeProjection();
+  // ChangeProjection(); //for part system
 				 	
 				 // добавим освещение к голове что бы как фонарик или прожектор светил при движении
 			    //  pLight->SetPosLight(pSnake->GetPosHeadX());
-			   
-
-		    	 
-				DrawLife(); 
 			//	DrawBack(); 
 				if ( deltaTime % 50 ) { DrawBonus(); }
 
 				 ShowSnake(); 
-
+  DrawLife(); 
 				 DrawFruct(); 
+
+               
 
 				 DrawStone();
 
 				// DrawPartSys();
-
 			     GameLogic();		
 
 			 glutPostRedisplay();
@@ -751,7 +762,7 @@ void CalcFPS()
 	                }*/
 				
  
-	if (NowTime - OldTime > 150) 
+	if (NowTime - OldTime > 250) 
 	{
 		
 		display();
@@ -860,7 +871,7 @@ void LoadResources()
      pLdrTexture->LoadTexture(pTexturePack[2],"Data/Apple-2.tga");
      pLdrTexture->LoadTexture(pTexturePack[3],"Data/back.tga"); 
 	 pLdrTexture->LoadTexture(pTexturePack[4],"Data/bonus.tga");
-	 pLdrTexture->LoadTexture(pTexturePack[5],"Data/stone.tga");
+	 pLdrTexture->LoadTexture(pTexturePack[5],"Data/stone2.tga");
 
 	  for(int i=0;i<6; i++)
 	  {
@@ -932,9 +943,8 @@ void GameInit()
 partSysTexture   = new Texture;
 
 for(int i=0;i<6;i++)
-{
   pTexturePack[i] = new Texture;
-}
+
          pFruct = new Fruct();
          pSnake = new Snake(*pFruct);
          pGame  = new Game();
@@ -942,25 +952,6 @@ for(int i=0;i<6;i++)
 	     pModel = new Model("C:\\mycube.obj");
 	pLdrTexture = new Quad();
          pBonus = new Bonus();
-
-		 for(int i=0;i<10;i++)
-		 pStone[i] = new Stone();
-
-	//pLight->OnOffLight(true);
-	pFruct->New();  
-	
-	pBonus->NewBonus();
-
-	 for(int i=0;i<9;i++)
-	 {
-		 pStone[i]->NewStone();
-		 if ((pStone[i]->GetPosStone().x+150) == (pStone[i+1]->GetPosStone().x+150)) { pStone[i]->NewStone(); pStone[i+1]->NewStone(); }
-	 }
-	
-
-	pSnake->dx = 10;
-	pSnake->dy = 10;
-	
 
 	pGameData->FructOnLevel[0] = 5;
 	pGameData->FructOnLevel[1] = 7;
@@ -970,13 +961,29 @@ for(int i=0;i<6;i++)
 
 	 TimeDraw = StartTime;
 
-	 eatSound.setBuffer(eatBuff);
-	 collisionSound.setBuffer(collisionBuff);
-	 gameoverSound.setBuffer(gameoverBuff);
+	//pLight->OnOffLight(true);
+	pFruct->New();  
+	
+	pBonus->NewBonus();
+
+	PosStones[0].x = 100; PosStones[0].y = 100;
+
+	pStone->NewStone(PosStones[0]);
 
 	LoadResources();
 
-	typedef BOOL (APIENTRY * wglSwapIntervalEXT_Func)(int);
+
+
+
+	pSnake->dx = 10;
+	pSnake->dy = 10;
+	
+
+     eatSound.setBuffer(eatBuff);
+	 collisionSound.setBuffer(collisionBuff);
+	 gameoverSound.setBuffer(gameoverBuff);
+	
+	 typedef BOOL (APIENTRY * wglSwapIntervalEXT_Func)(int);
 wglSwapIntervalEXT_Func wglSwapIntervalEXT =
   wglSwapIntervalEXT_Func(wglGetProcAddress("wglSwapIntervalEXT"));
 if(wglSwapIntervalEXT) wglSwapIntervalEXT(0); // 1 - чтобы включить  vsync
